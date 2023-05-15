@@ -1,4 +1,4 @@
-# ETL_ .csv-to-PostGreSQL, to- .csv, to- .xlsx, to-.json
+# ETL
 ## Extraction of csv file, Transformation and Loading to PostGreSQL - amazon_sale_report.csv
 ### Extraction 
 1) Importing Required Libraries
