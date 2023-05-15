@@ -123,3 +123,148 @@ connection.close()
 
 
 
+## CSV Extraction, Transformation, and Loading to .csv. (Files : fpl_tweets.zip; Output file: tweets1.zip)
+### Introduction
+- This code performs data extraction, transformation, and loading from a CSV file. 
+- It utilizes the pandas library for data manipulation and analysis, psycopg2 library for PostgreSQL database connection, and numpy library for support with  
+  arrays and matrices. 
+- The code reads a CSV file, performs various transformations and cleaning operations, and saves the processed data into another CSV file.
+### Extraction 
+```Python
+import pandas as pd
+import psycopg2
+import numpy as np
+pd.options.mode.chained_assignment = None
+```
+- The first line imports the pandas library, which provides data manipulation and analysis tools.
+- The second line imports the psycopg2 library, which is used for connecting to PostgreSQL databases.
+- The third line imports the numpy library, which provides support for large, multi-dimensional arrays and matrices.
+- The fourth line disables the warning for chained assignments in pandas.
+
+```Python
+dtypes = {
+    'ID': str,
+    'Timestamp': str,
+    'User': str,
+    'Text': str,
+    'Hashtag': str,
+    'Retweets': float,
+    'Likes': float,
+    'Replies': float,
+    'Source': str,
+    'Location': str,
+    'Verified_Account': bool,
+    'Followers': float,
+    'Following': float
+}
+
+df = pd.read_csv('FPL_tweets.csv/fpl_tweets.csv', dtype=dtypes, low_memory=False)
+```
+- Here, I have defined the column data types for the DataFrame using the dtypes dictionary.
+- The pd.read_csv function is used to read the CSV file named 'fpl_tweets.csv' and store it in the DataFrame df. 
+- The dtype parameter specifies the data types for each column.
+- The low_memory=False parameter is set to prevent a warning related to mixed data types in columns.
+
+```Python
+df = df.rename(columns={'Following':'following'})
+
+tweets = df
+tweets.columns
+tweets = tweets.rename(columns={"ID": "id","Timestamp":"timestamp", "User":"user", "Text":"text", "Hashtag":"hashtag", "Retweets":"retweets", "Likes":"likes", "Replies":"replies", "Source":"source", "Location":"location", "Verified_Account":"verified_account", "Followers":"followers", "Following":"following"})
+
+tweets1 = tweets[['id', 'location', 'user', 'text', 'hashtag', 'retweets', 'likes', 'replies', 'source', 'location', 'verified_account', 'followers', 'following']]
+```
+- In the first line, I have renamed the column 'Following' to 'following' in the DataFrame df.
+- The next few lines create a new DataFrame called tweets and rename several columns using the rename() method.
+- Finally, I have created another DataFrame tweets1 by selecting specific columns from tweets.
+
+## Transformation
+
+```Python
+numeric_columns = ['retweets', 'likes', 'replies']
+unique_values = df[numeric_columns].apply(pd.Series.unique)
+
+columns_to_drop = ['id', 'timestamp', 'hashtag', 'source', 'location']
+df = df.drop(columns=columns_to_drop)
+```
+- The first line creates a list called numeric_columns containing the names of numeric columns.
+- The second line finds the unique values for the columns specified in numeric_columns using apply() and pd.Series.unique.
+- The third line creates a list called columns_to_drop containing the names of columns to be dropped.
+- The last line drops the columns specified in columns_to_drop from the DataFrame df.
+
+```Python
+df = df.drop_duplicates()
+df = df.dropna()
+```
+- The second line drops rows with missing values (NaN) from the DataFrame df.
+
+```Python
+df['text'] = df['text'].str.replace('[^a-zA-Z\s]', '', regex=True)
+```
+- This line uses the str.replace() method to remove non-alphabetic characters and special characters from the 'text' column in the DataFrame df. 
+- The regular expression '[^a-zA-Z\s]' matches any character that is not a letter or a whitespace.
+
+```Python
+df['verified_account'] = df['verified_account'].astype(bool)
+df['followers'] = pd.to_numeric(df['followers'], errors='coerce')
+df['following'] = pd.to_numeric(df['following'], errors='coerce')
+```
+- The first line converts the 'verified_account' column to boolean data type.
+- The second line converts the 'followers' column to numeric data type, using pd.to_numeric() with the errors='coerce' parameter to replace invalid values with  
+  NaN.
+- The third line converts the 'following' column to numeric data type, also handling invalid values.
+
+```Python
+df = df.reset_index(drop=True)
+print(df.head())
+```
+- This line resets the index of the DataFrame df and drops the old index.
+- The print() function is used to display the first few rows of the modified DataFrame.
+
+## Load
+
+```Python
+tweets1.to_csv('tweets1.csv', index=False)
+```
+- This line exports the DataFrame tweets1 to a CSV file named 'tweets1.csv', excluding the index column.
+### Dependencies
+- Ensure you have the following dependencies installed:
+pandas (version 1.3.0 or later)
+psycopg2 (version 2.9.0 or later)
+numpy (version 1.21.0 or later)
+
+
+ To install the required dependencies, follow these steps:
+Open a command prompt or terminal.
+1) Run the following command to install pandas:
+```Python
+pip install pandas>=1.3.0
+```
+2) Run the following command to install psycopg2:
+```Python
+pip install psycopg2>=2.9.0
+```
+3) Run the following command to install numpy:
+```Python
+pip install numpy>=1.21.0
+
+```
+### Usage
+- Follow the instructions below to use the code:
+1) Place the input CSV file 'fpl_tweets.csv' in the same directory as the script.
+2) If necessary, update the dtypes dictionary in the code to match the column data types in the CSV file.
+3) Run the script to extract, transform, and load the data.
+4) The processed data will be saved in the 'tweets1.csv' file in the same directory as the script.
+### Potential Issues
+- Please be aware of the following potential issues while running the code:
+1) Ensure that the input CSV file ('fpl_tweets.csv') is in the correct format and located in the same directory as the script.
+2) Check for any missing or inconsistent data in the CSV file, as it may lead to errors during data transformation.
+3) Make sure to have the required versions of dependencies installed, as incompatible versions can cause compatibility issues.
+
+
+
+
+
+
+
+
