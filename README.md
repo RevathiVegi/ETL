@@ -263,6 +263,120 @@ pip install numpy>=1.21.0
 
 
 
+## CSV Extraction, Transformation, and Loading to .csv. (Files : Spotify_Youtube.csv ; Output file: Spotify_Youtube.xlsx)
+### Introduction 
+- This code takes a CSV file, performs some data manipulation using pandas, and saves the modified data to an Excel file. 
+- Here's a breakdown of the steps:
+- Import the required modules: openpyxl, pandas, and os.
+- Set the path of the input CSV file using csv_file_path.
+- Read the CSV file into a pandas DataFrame using pd.read_csv(), and store it in the variable df.
+- Retrieve the column names of the DataFrame using df.columns.
+- Create a new column called 'Total Plays' in the DataFrame by adding the 'Views' and 'Likes' columns.
+- Set the path for the output Excel file using excel_file_path.
+- Create the output directory if it doesn't already exist using os.makedirs().
+- Create an Excel workbook using openpyxl.Workbook() and get the active worksheet using workbook.active.
+- Iterate over the column names of the DataFrame and write them to the first row of the worksheet.
+- Iterate over the rows and columns of the DataFrame, writing the values to the corresponding cells in the worksheet.
+- Save the workbook to the specified Excel file path using workbook.save().
+- Check if the Excel file was created successfully using os.path.isfile() and print the appropriate message.
+- Print the absolute path of the created Excel file.
+### Extraction 
+```Python
+import openpyxl
+import pandas as pd
+import os
+```
+- The code begins by importing the necessary modules: openpyxl for working with Excel files, pandas for data manipulation, and os for operating system-related functions.
+
+```Python
+csv_file_path = 'work/src/Spotify_Youtube.csv/Spotify_Youtube.csv'
+```
+- This line sets the path of the input CSV file, Spotify_Youtube.csv, which is assumed to be located at 'work/src/Spotify_Youtube.csv/Spotify_Youtube.csv'.
+
+```Python
+df = pd.read_csv('Spotify_Youtube.csv/Spotify_Youtube.csv')
+```
+- Here, the pd.read_csv() function from pandas is used to read the CSV file and store the data in a DataFrame called df.
+
+```Python
+df.columns
+```
+- This line retrieves the column names of the DataFrame df.
+
+```Python
+df['Total Plays'] = df['Views'] + df['Likes']
+```
+- This line creates a new column called 'Total Plays' in the DataFrame df, which is calculated by summing the values of the 'Views' and 'Likes' columns.
+
+```Python
+excel_file_path = 'work/output/Spotify_Youtube.xlsx'
+```
+- This line sets the path for the output Excel file, 'Spotify_Youtube.xlsx', which is assumed to be located at 'work/output/Spotify_Youtube.xlsx'.
+
+```Python
+output_directory = "work/output"
+os.makedirs(output_directory, exist_ok=True)
+```
+- These lines create the output directory 'work/output' if it doesn't already exist. os.makedirs() is used with the exist_ok=True parameter to prevent an error if the directory already exists.
+
+```Python
+workbook = openpyxl.Workbook()
+worksheet = workbook.active
+```
+- Here, an Excel workbook is created using openpyxl.Workbook(), and the active worksheet is obtained using workbook.active.
+
+```Python
+for column_index, column_header in enumerate(df.columns, start=1):
+    worksheet.cell(row=1, column=column_index, value=column_header)
+```
+- This loop iterates over the column names of the DataFrame df and assigns each column header to a cell in the first row of the worksheet.
+
+```Python
+for row_index, row_data in df.iterrows():
+    for column_index, column_header in enumerate(df.columns, start=1):
+        worksheet.cell(row=row_index+2, column=column_index, value=row_data[column_header])
+```
+- These nested loops iterate over the rows and columns of the DataFrame df. 
+- The values from each row of the DataFrame are written to the corresponding cells in the worksheet.
+
+```Python
+workbook.save(excel_file_path)
+```
+- This line saves the workbook to the specified Excel file path.
+
+```Python
+if os.path.isfile(excel_file_path):
+    print("Excel file created successfully!")
+else:
+    print("Excel file not found.")
+```
+- This conditional statement checks if the Excel file was created successfully by verifying its existence using   
+  os.path.isfile(). 
+- It prints a corresponding success or failure message.
+
+```Python
+print("Excel file path:", os.path.abspath(excel_file_path))
+```
+- Finally, this line prints the absolute path of the created Excel file.
+### Potential Issues:
+1) File Paths: Ensure that the input CSV file 'Spotify_Youtube.csv' is located at the correct path 'work/src/Spotify_Youtube.csv/Spotify_Youtube.csv', and the  
+  output directory 'work/output' exists or can be created.
+2) Missing Modules: Make sure that the required modules (openpyxl and pandas) are installed and accessible in the Python environment where the code is executed.
+3) DataFrame Columns: Check that the CSV file has the expected column names ('Views', 'Likes'), and they are case-sensitive. Otherwise, the column manipulation a    and iteration steps may encounter errors.
+4) Excel File Overwrite: Be cautious when running the code multiple times, as it will overwrite the existing Excel file at the specified path without  
+   confirmation.
+5) Memory Usage: If the input CSV file is extremely large, the code may consume a significant amount of memory, especially during the DataFrame creation and 
+   iteration steps. 
+   This could potentially lead to memory errors on systems with limited resources. 
+   In such cases, consider processing the data in smaller chunks or optimizing memory usage.
+6) General Compatibility: Confirm that the code is executed using a compatible Python version and that the required libraries are compatible with the version  
+   being used. 
+   Additionally, keep in mind that the code may not work correctly if there are significant changes to the library dependencies or if the underlying functionality    changes.
+
+
+
+
+
 
 
 
