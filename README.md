@@ -1,5 +1,5 @@
 # ETL
-## Extraction of csv file, Transformation and Loading to PostGreSQL - amazon_sale_report.csv
+## Extraction of csv file, Transformation and Loading to PostGreSQL - amazon_sale_report.csv(zip file)
 ### Extraction 
 1) Importing Required Libraries
 ```Python
@@ -123,11 +123,10 @@ connection.close()
 
 
 
-## CSV Extraction, Transformation, and Loading to .csv. (Files : fpl_tweets.zip; Output file: tweets1.zip)
+## CSV Extraction, Transformation, and Loading to .csv. (Files : fpl_tweets.csv(zip); Output file: tweets1.csv(zip))
 ### Introduction
 - This code performs data extraction, transformation, and loading from a CSV file. 
-- It utilizes the pandas library for data manipulation and analysis, psycopg2 library for PostgreSQL database connection, and numpy library for support with  
-  arrays and matrices. 
+- It utilizes the pandas library for data manipulation and analysis, psycopg2 library for PostgreSQL database connection, and numpy library for support with arrays and matrices. 
 - The code reads a CSV file, performs various transformations and cleaning operations, and saves the processed data into another CSV file.
 ### Extraction 
 ```Python
@@ -210,8 +209,7 @@ df['followers'] = pd.to_numeric(df['followers'], errors='coerce')
 df['following'] = pd.to_numeric(df['following'], errors='coerce')
 ```
 - The first line converts the 'verified_account' column to boolean data type.
-- The second line converts the 'followers' column to numeric data type, using pd.to_numeric() with the errors='coerce' parameter to replace invalid values with  
-  NaN.
+- The second line converts the 'followers' column to numeric data type, using pd.to_numeric() with the errors='coerce' parameter to replace invalid values with NaN.
 - The third line converts the 'following' column to numeric data type, also handling invalid values.
 
 ```Python
@@ -234,7 +232,7 @@ psycopg2 (version 2.9.0 or later)
 numpy (version 1.21.0 or later)
 
 
- To install the required dependencies, follow these steps:
+To install the required dependencies, follow these steps:
 Open a command prompt or terminal.
 1) Run the following command to install pandas:
 ```Python
@@ -263,7 +261,7 @@ pip install numpy>=1.21.0
 
 
 
-## CSV Extraction, Transformation, and Loading to .csv. (Files : Spotify_Youtube.csv ; Output file: Spotify_Youtube.xlsx)
+## CSV Extraction, Transformation, and Loading to .xlsx. (Files : Spotify_Youtube.csv ; Output file: Spotify_Youtube.xlsx)
 ### Introduction 
 - This code takes a CSV file, performs some data manipulation using pandas, and saves the modified data to an Excel file. 
 - Here's a breakdown of the steps:
@@ -350,8 +348,7 @@ if os.path.isfile(excel_file_path):
 else:
     print("Excel file not found.")
 ```
-- This conditional statement checks if the Excel file was created successfully by verifying its existence using   
-  os.path.isfile(). 
+- This conditional statement checks if the Excel file was created successfully by verifying its existence using os.path.isfile(). 
 - It prints a corresponding success or failure message.
 
 ```Python
@@ -362,7 +359,7 @@ print("Excel file path:", os.path.abspath(excel_file_path))
 1) File Paths: Ensure that the input CSV file 'Spotify_Youtube.csv' is located at the correct path 'work/src/Spotify_Youtube.csv/Spotify_Youtube.csv', and the  
   output directory 'work/output' exists or can be created.
 2) Missing Modules: Make sure that the required modules (openpyxl and pandas) are installed and accessible in the Python environment where the code is executed.
-3) DataFrame Columns: Check that the CSV file has the expected column names ('Views', 'Likes'), and they are case-sensitive. Otherwise, the column manipulation a    and iteration steps may encounter errors.
+3) DataFrame Columns: Check that the CSV file has the expected column names ('Views', 'Likes'), and they are case-sensitive. Otherwise, the column manipulation a and iteration steps may encounter errors.
 4) Excel File Overwrite: Be cautious when running the code multiple times, as it will overwrite the existing Excel file at the specified path without  
    confirmation.
 5) Memory Usage: If the input CSV file is extremely large, the code may consume a significant amount of memory, especially during the DataFrame creation and 
@@ -371,9 +368,121 @@ print("Excel file path:", os.path.abspath(excel_file_path))
    In such cases, consider processing the data in smaller chunks or optimizing memory usage.
 6) General Compatibility: Confirm that the code is executed using a compatible Python version and that the required libraries are compatible with the version  
    being used. 
-   Additionally, keep in mind that the code may not work correctly if there are significant changes to the library dependencies or if the underlying functionality    changes.
+   Additionally, keep in mind that the code may not work correctly if there are significant changes to the library dependencies or if the underlying functionality changes.
+   
+   
+   
+   
+## Extraction of csv file, Transformation and Loading to .json (Files: meets.csv, meets.py; Output file: meets.json)
+### Documentation: The provided code performs the following steps:
+- Imports necessary modules: csv, json, os, and pandas.
+- Defines the file paths:
+- csv_file_path: Path to the input CSV file ('meets.csv').
+- json_file_path: Path to the output JSON file ('work/output/meets.json').
+- Reads the CSV file into a DataFrame using pd.read_csv().
+- Creates a new DataFrame meets to hold the data from the CSV file.
+- Initializes an empty list data to store the transformed data.
+- Reads and transforms the data from the CSV file using a csv.DictReader object. 
+- Each row is transformed into a dictionary and appended to the data list.
+- Checks if the JSON file already exists: If the file exists, it loads the existing JSON data into a list called existing_data.
+- The transformed data from step 6 is appended to existing_data.
+- The updated existing_data is then written back to the JSON file.
+- If the file does not exist, it creates a new JSON file and writes the data list to it.
+- Checks if the JSON file exists in the specified directory and prints the corresponding message.
 
+### Extraction
+```Python
+import csv
+import json
+import os
+import pandas as pd
+```
+- CSV file path
+```Python
+csv_file_path = 'meets.csv'
+```
 
+- Read the CSV file into a DataFrame
+```python
+df = pd.read_csv('meets.csv')
+```
+
+- Create a new DataFrame 'meets' to hold the data
+```Python
+meets = df
+meets.columns
+```
+
+- JSON file path
+```Python
+json_file_path = 'work/output/meets.json'`
+```
+
+### Transformation
+- List to store the transformed data
+```Python
+data = []
+```
+
+- Read and transform the data from the CSV file
+```Python
+with open(csv_file_path, 'r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    for row in csv_reader:
+        transformed_row = {
+            'MeetID': row['MeetID'],
+            'Federation': row['Federation'],
+            'Date': row['Date'],  # Additional transformations can be applied here
+            'MeetCountry': row['MeetCountry'],  # Additional transformations can be applied here
+            'MeetState': row['MeetState'].strip(),  # Example: Removing leading/trailing whitespaces
+            'MeetTown': row['MeetTown'].strip(),  # Example: Removing leading/trailing whitespaces
+            'MeetName': row['MeetName'].strip()  # Example: Removing leading/trailing whitespaces
+        }
+        data.append(transformed_row)
+```
+
+### Load
+- Check if JSON file exists
+```Python
+if os.path.isfile(json_file_path):
+    # Load existing JSON data
+    with open(json_file_path, 'r') as json_file:
+        existing_data = json.load(json_file)
+ ```   
+
+- Append new data to existing JSON data 
+```Python
+existing_data.extend(data)
+```
+
+- Write updated JSON data back to the file
+```Python
+    with open(json_file_path, 'w') as json_file:
+        json.dump(existing_data, json_file)
+else:
+    with open(json_file_path, 'w') as json_file:
+        json.dump(data, json_file)
+```
+
+- Check if JSON file exists
+```Python
+directory = 'work/output/'
+json_files = [file for file in os.listdir(directory) if file.endswith('.json')]
+
+if len(json_files) > 0:
+    print("JSON file exists")
+else:
+    print("JSON file does not exist")
+```
+### Potential issues:
+- Ensure that the paths to the input CSV file and output JSON file are correct.
+- The code assumes that the input CSV file has the specified column names ('MeetID', 'Federation', 'Date', 'MeetCountry', 'MeetState', 'MeetTown', 'MeetName'). 
+- Make sure these column names match the actual column names in your CSV file.
+- If the input CSV file contains large amounts of data, loading all the data into memory as a DataFrame may consume significant memory resources. 
+- Consider processing the data in smaller chunks or using alternative approaches if memory becomes a limitation.
+- Make sure the necessary libraries (e.g., pandas) are installed in your environment.
+- The code assumes that the output JSON file is in the 'work/output/' directory. 
+- Adjust the json_file_path and directory variables if your desired file location is different.
 
 
 
